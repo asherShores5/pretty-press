@@ -1,49 +1,75 @@
-// File: src/routes/formatters.js
-const express = require('express');
-const router = express.Router();
-const jsonFormatter = require('../formatters/jsonFormatter');
-const markdownFormatter = require('../formatters/markdownFormatter');
-const htmlFormatter = require('../formatters/htmlFormatter');
-const cssFormatter = require('../formatters/cssFormatter');
+import prettier from 'prettier/standalone';
+import parserPostcss from 'prettier/parser-postcss';
+import { html as beautifyHtml } from 'js-beautify';
+import { marked } from 'marked';
 
-router.post('/json', async (req, res) => {
-  try {
-    const { code } = req.body;
-    const formattedCode = await jsonFormatter.format(code);
-    res.json({ formatted: formattedCode });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+export class JsonFormatter {
+  async format(code) {
+    try {
+      // First validate the JSON
+      const parsed = JSON.parse(code);
+      // For browser compatibility, stringify with proper indentation
+      return JSON.stringify(parsed, null, 2);
+    } catch (error) {
+      throw new Error('Invalid JSON: ' + error.message);
+    }
   }
-});
+}
 
-router.post('/markdown', async (req, res) => {
-  try {
-    const { code } = req.body;
-    const formattedCode = await markdownFormatter.format(code);
-    res.json({ formatted: formattedCode });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+export class HtmlFormatter {
+  async format(code) {
+    try {
+      const formattedCode = beautifyHtml(code, {
+        indent_size: 8,
+        indent_char: '\t',
+        indent_with_tabs: true,
+        preserve_newlines: true,
+        max_preserve_newlines: 1,
+        wrap_line_length: 0,
+        wrap_attributes: 'auto',
+        wrap_attributes_indent_size: undefined,
+        end_with_newline: true
+      });
+      return formattedCode;
+    } catch (error) {
+      throw new Error('Invalid HTML: ' + error.message);
+    }
   }
-});
+}
 
-router.post('/html', async (req, res) => {
-  try {
-    const { code } = req.body;
-    const formattedCode = await htmlFormatter.format(code);
-    res.json({ formatted: formattedCode });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+export class CssFormatter {
+  async format(code) {
+    try {
+      // Use the standalone prettier with explicit CSS parser plugin
+      const formattedCode = prettier.format(code, {
+        parser: 'css',
+        plugins: [parserPostcss],
+        printWidth: 80,
+        tabWidth: 2,
+        useTabs: false
+      });
+      return formattedCode;
+    } catch (error) {
+      throw new Error('Invalid CSS: ' + error.message);
+    }
   }
-});
+}
 
-router.post('/css', async (req, res) => {
-  try {
-    const { code } = req.body;
-    const formattedCode = await cssFormatter.format(code);
-    res.json({ formatted: formattedCode });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+export class MarkdownFormatter {
+  async format(code) {
+    try {
+      const html = marked.parse(code);
+      return html;
+    } catch (error) {
+      throw new Error('Invalid Markdown: ' + error.message);
+    }
   }
-});
+}
 
-module.exports = router;
+// Create instances
+export const formatters = {
+  json: new JsonFormatter(),
+  html: new HtmlFormatter(),
+  css: new CssFormatter(),
+  markdown: new MarkdownFormatter()
+};

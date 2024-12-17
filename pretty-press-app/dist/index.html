@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrettyPress - Code & Document Formatter</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/image.png" />
+    <!-- Add Ace Editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/theme-twilight.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-json.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-html.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-css.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-markdown.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+  <script type="module" crossorigin src="/assets/main-B5Qt9EMX.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>PrettyPress</h1>
+        <h2>Code & Document Formatter</h2>
+       
+        <div class="formatter-container">
+            <div class="input-section">
+                <div class="controls">
+                    <select id="formatType">
+                        <option value="json">JSON</option>
+                        <option value="markdown">Markdown to HTML</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                    </select>
+                    <button class="secondary" id="formatBtn">Format</button>
+                    <button class="secondary" id="clearBtn">Clear</button>
+                </div>
+                <div id="editor" class="editor-container"></div>
+            </div>
+           
+            <div class="output-section">
+                <div class="controls">
+                    <h3>Output</h3>
+                    <button class="secondary" id="copyBtn">Copy</button>
+                </div>
+                <div id="output-editor" class="editor-container"></div>
+            </div>
+        </div>
+    </div>
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Preview</h3>
+                <button class="secondary" id="closePreviewBtn">Close</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="previewFrame" sandbox="allow-same-origin"></iframe>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="/script.js"></script>
+</body>
+</html>
