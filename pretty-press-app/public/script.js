@@ -1,4 +1,4 @@
-import { formatters } from '/src/routes/formatters.js';
+import { formatters } from '/formatters.js';
 
 // Initialize Ace Editor instances
 let inputEditor = ace.edit("editor");

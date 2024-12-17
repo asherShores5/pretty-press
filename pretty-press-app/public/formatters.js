@@ -1,14 +1,13 @@
-import prettier from 'prettier/standalone';
-import parserPostcss from 'prettier/parser-postcss';
-import { html as beautifyHtml } from 'js-beautify';
-import { marked } from 'marked';
+// public/formatters.js
+import prettier from 'https://unpkg.com/prettier@2.8.8/esm/standalone.mjs';
+import parserPostcss from 'https://unpkg.com/prettier@2.8.8/esm/parser-postcss.mjs';
+import { marked } from 'https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js';
 
+// Note: js-beautify needs to be loaded via script tag in index.html
 export class JsonFormatter {
   async format(code) {
     try {
-      // First validate the JSON
       const parsed = JSON.parse(code);
-      // For browser compatibility, stringify with proper indentation
       return JSON.stringify(parsed, null, 2);
     } catch (error) {
       throw new Error('Invalid JSON: ' + error.message);
@@ -19,7 +18,8 @@ export class JsonFormatter {
 export class HtmlFormatter {
   async format(code) {
     try {
-      const formattedCode = beautifyHtml(code, {
+      // Use the global js-beautify from window
+      const formattedCode = window.html_beautify(code, {
         indent_size: 8,
         indent_char: '\t',
         indent_with_tabs: true,
@@ -40,7 +40,6 @@ export class HtmlFormatter {
 export class CssFormatter {
   async format(code) {
     try {
-      // Use the standalone prettier with explicit CSS parser plugin
       const formattedCode = prettier.format(code, {
         parser: 'css',
         plugins: [parserPostcss],
