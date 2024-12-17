@@ -4,6 +4,8 @@ A fast, browser-based code and document formatter. Format JSON, HTML, CSS, and M
 
 Try it live at: [prettypress.ashershores.com](https://prettypress.ashershores.com)
 
+![image](https://github.com/user-attachments/assets/6fff7de9-93f7-4637-9422-17f2a1f728cd)
+
 ## Features
 
 - **Multiple Format Support**
