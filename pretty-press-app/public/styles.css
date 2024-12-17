@@ -41,7 +41,6 @@ h2 {
     min-height: 500px;
 }
 
-/* Update controls to include preview button */
 .controls {
     display: flex;
     align-items: center;
