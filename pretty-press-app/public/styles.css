@@ -1,0 +1,161 @@
+:root {
+    --background: #1e1e1e;
+    --button-primary: #3498db;
+    --button-hover: #2980b9;
+    --text-primary: #d4d4d4;
+    --text-secondary: #858585;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--background);
+    color: var(--text-primary);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: var(--button-primary);
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+h2 {
+    color: var(--text-secondary);
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 0;
+}
+
+.formatter-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+    height: calc(100vh - 150px);
+    min-height: 500px;
+}
+
+/* Update controls to include preview button */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#previewBtn {
+    display: none; /* Hidden by default */
+}
+
+.input-section, .output-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+select {
+    background-color: #252526;
+    color: var(--text-primary);
+    border: 1px solid #333;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    min-width: 120px;
+}
+
+button {
+    background-color: var(--button-primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: var(--button-hover);
+}
+
+button.secondary {
+    background-color: #252526;
+    color: var(--text-primary);
+    border: 1px solid #333;
+}
+
+button.secondary:hover {
+    background-color: #333;
+}
+
+.editor-container {
+    flex-grow: 1;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.output-section .controls {
+    justify-content: space-between;
+}
+
+.output-section h3 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background-color: var(--background);
+    margin: 2% auto;
+    width: 90%;
+    height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #333;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.modal-body {
+    flex-grow: 1;
+    padding: 15px;
+    overflow: auto;
+    background-color: white;
+    border-radius: 0 0 8px 8px;
+}
+
+#previewFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: white;
+}

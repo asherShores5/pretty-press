@@ -1,0 +1,35 @@
+{
+  "name": "pretty-press-app",
+  "version": "1.0.0",
+  "description": "Code formatter and prettifier on the web",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asherShores5/pretty-press.git"
+  },
+  "author": "Asher Shores",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/asherShores5/pretty-press/issues"
+  },
+  "homepage": "https://github.com/asherShores5/pretty-press#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "prettier": "^3.4.2",
+    "js-beautify": "^1.15.1",
+    "marked": "^15.0.4",
+    "yaml": "^2.3.4",
+    "sql-formatter": "^15.0.0",
+    "typescript": "^5.3.0",
+    "eslint": "^8.56.0",
+    "jsonschema": "^1.4.1",
+    "jwt-decode": "^4.0.0",
+    "python-format": "^1.0.0"
+  }
+}
