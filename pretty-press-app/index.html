@@ -3,59 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrettyPress - Code & Document Formatter</title>
+    <title>PrettyPress — Code &amp; Document Formatter</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" href="/image.png" />
-    <!-- Ace Editor -->
+
+    <!-- Ace Editor core + modes -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/theme-twilight.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-json.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-html.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-css.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-markdown.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-typescript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-xml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/mode-sql.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ext-searchbox.js"></script>
+
+    <!-- js-beautify (HTML + JS formatting) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-css.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>PrettyPress</h1>
-        <h2>Code & Document Formatter</h2>
-       
-        <div class="formatter-container">
-            <div class="input-section">
-                <div class="controls">
-                    <select id="formatType">
-                        <option value="json">JSON</option>
-                        <option value="markdown">Markdown to HTML</option>
-                        <option value="html">HTML</option>
-                        <option value="css">CSS</option>
-                    </select>
-                    <button class="secondary" id="formatBtn">Format</button>
-                    <button class="secondary" id="clearBtn">Clear</button>
+
+<!-- ── Header ──────────────────────────────────────────────── -->
+<header>
+    <div class="header-inner">
+        <div class="brand">
+            <img src="/image.png" alt="PrettyPress logo" class="logo" />
+            <span class="brand-name">PrettyPress</span>
+        </div>
+
+        <div class="header-center">
+            <span class="shortcut-hint" title="Keyboard shortcut to format">
+                <kbd>Ctrl</kbd><kbd>Enter</kbd> to format
+            </span>
+        </div>
+
+        <nav class="header-nav" aria-label="External links">
+            <a href="https://github.com/asherShores5/pretty-press" target="_blank" rel="noopener" class="nav-link" title="View source on GitHub">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                GitHub
+            </a>
+        </nav>
+    </div>
+</header>
+
+<!-- ── Toolbar ─────────────────────────────────────────────── -->
+<div class="toolbar">
+    <div class="toolbar-inner">
+        <!-- Format type -->
+        <div class="toolbar-group">
+            <label for="formatType" class="toolbar-label">Language</label>
+            <select id="formatType" aria-label="Format type">
+                <optgroup label="Web">
+                    <option value="json">JSON</option>
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                    <option value="markdown">Markdown</option>
+                </optgroup>
+                <optgroup label="Code">
+                    <option value="javascript">JavaScript</option>
+                    <option value="typescript">TypeScript</option>
+                </optgroup>
+                <optgroup label="Data / Query">
+                    <option value="xml">XML</option>
+                    <option value="sql">SQL</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <!-- Mode toggle -->
+        <div class="toolbar-group">
+            <label class="toolbar-label">Mode</label>
+            <div class="toggle-group" role="group" aria-label="Format mode">
+                <button id="modeFormat" class="toggle-btn active" aria-pressed="true">Format</button>
+                <button id="modeMinify" class="toggle-btn" aria-pressed="false">Minify</button>
+            </div>
+        </div>
+
+        <!-- View options -->
+        <div class="toolbar-group">
+            <label class="toolbar-label">View</label>
+            <div class="toggle-group" role="group" aria-label="View mode">
+                <button id="viewSplit"  class="toggle-btn active" aria-pressed="true"  title="Side-by-side panels">Split</button>
+                <button id="viewDiff"   class="toggle-btn"        aria-pressed="false" title="Show what changed">Diff</button>
+            </div>
+        </div>
+
+        <!-- Editor options -->
+        <div class="toolbar-group">
+            <label class="toolbar-label">Options</label>
+            <div class="option-row">
+                <label class="checkbox-label" title="Wrap long lines">
+                    <input type="checkbox" id="wordWrapToggle" />
+                    <span>Wrap</span>
+                </label>
+                <div class="font-size-ctrl" aria-label="Font size">
+                    <button id="fontDecrease" class="icon-btn ghost" title="Decrease font size" aria-label="Decrease font size">A−</button>
+                    <span id="fontSizeDisplay" class="font-size-val">14</span>
+                    <button id="fontIncrease" class="icon-btn ghost" title="Increase font size" aria-label="Increase font size">A+</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="toolbar-group toolbar-actions">
+            <button id="formatBtn" class="btn-primary">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="4 7 4 4 20 4"/><line x1="9" y1="4" x2="9" y2="13"/><rect x="9" y="13" width="6" height="7" rx="1"/><line x1="15" y1="4" x2="15" y2="13"/></svg>
+                Format
+            </button>
+            <button id="clearBtn" class="ghost">Clear</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Main ────────────────────────────────────────────────── -->
+<main class="container">
+    <div class="formatter-container" id="formatterContainer">
+
+        <!-- Input Panel -->
+        <div class="panel input-panel" id="inputPanel">
+            <div class="panel-header">
+                <span class="panel-label">Input</span>
+                <div class="panel-actions">
+                    <button id="loadFileBtn" class="ghost icon-btn" title="Load a file" aria-label="Load file">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Load file
+                    </button>
+                    <input type="file" id="fileInput" accept=".json,.html,.htm,.css,.md,.markdown,.js,.ts,.xml,.sql,.txt" hidden aria-hidden="true" />
+                </div>
+            </div>
+            <div class="editor-wrapper">
                 <div id="editor" class="editor-container"></div>
-            </div>
-           
-            <div class="output-section">
-                <div class="controls">
-                    <h3>Output</h3>
-                    <button class="secondary" id="copyBtn">Copy</button>
+                <!-- Drag-drop overlay -->
+                <div id="dropOverlay" class="drop-overlay" aria-hidden="true">
+                    <div class="drop-message">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        <span>Drop file to load</span>
+                    </div>
                 </div>
-                <div id="output-editor" class="editor-container"></div>
+            </div>
+            <div class="status-bar" id="inputStatus">
+                <span id="inputCursor">Ln 1, Col 1</span>
+                <span id="inputCount">0 chars</span>
+            </div>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="panel output-panel" id="outputPanel">
+            <div class="panel-header">
+                <span class="panel-label">Output</span>
+                <div class="panel-actions">
+                    <button id="previewBtn" class="ghost icon-btn" hidden title="Preview rendered output" aria-label="Preview">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Preview
+                    </button>
+                    <button id="downloadBtn" class="ghost icon-btn" title="Download output" aria-label="Download">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download
+                    </button>
+                    <button id="copyBtn" class="ghost icon-btn" title="Copy to clipboard" aria-label="Copy">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <div id="output-editor" class="editor-container"></div>
+            <div class="status-bar" id="outputStatus">
+                <span id="outputCount">0 chars</span>
+                <span id="outputSavings" class="savings"></span>
+            </div>
+        </div>
+
+        <!-- Diff Panel (hidden until diff mode) -->
+        <div class="panel diff-panel" id="diffPanel" hidden>
+            <div class="panel-header">
+                <span class="panel-label">Diff — what changed</span>
+                <div class="panel-actions">
+                    <button id="copyDiffBtn" class="ghost icon-btn" aria-label="Copy diff">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <div id="diff-output" class="diff-output"></div>
+        </div>
+
+    </div>
+
+    <!-- Empty state hint -->
+    <div id="emptyHint" class="empty-hint" aria-live="polite">
+        <div class="hint-grid">
+            <div class="hint-card">
+                <div class="hint-icon">⌨️</div>
+                <div class="hint-text">
+                    <strong>Paste or type</strong> your code in the input panel, then hit
+                    <kbd>Ctrl</kbd><kbd>Enter</kbd> or the Format button.
+                </div>
+            </div>
+            <div class="hint-card">
+                <div class="hint-icon">📂</div>
+                <div class="hint-text">
+                    <strong>Drop a file</strong> anywhere on the input panel, or use
+                    <em>Load file</em> to open JSON, HTML, CSS, JS, TS, XML, SQL, or Markdown.
+                </div>
+            </div>
+            <div class="hint-card">
+                <div class="hint-icon">🔀</div>
+                <div class="hint-text">
+                    <strong>Diff mode</strong> highlights exactly what the formatter changed —
+                    useful for reviewing minified or messy code.
+                </div>
+            </div>
+            <div class="hint-card">
+                <div class="hint-icon">💾</div>
+                <div class="hint-text">
+                    <strong>Auto-saved</strong> per language. Your input is restored when you
+                    come back, even after closing the tab.
+                </div>
             </div>
         </div>
     </div>
-    <div id="previewModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Preview</h3>
-                <button class="secondary" id="closePreviewBtn">Close</button>
-            </div>
-            <div class="modal-body">
-                <iframe id="previewFrame" sandbox="allow-same-origin"></iframe>
-            </div>
+</main>
+
+<!-- ── Preview Modal ───────────────────────────────────────── -->
+<div id="previewModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title" id="previewModalTitle">Preview</span>
+            <button id="closePreviewBtn" class="ghost icon-btn" aria-label="Close preview">✕</button>
+        </div>
+        <div class="modal-body">
+            <iframe id="previewFrame" sandbox="allow-same-origin" title="Formatted output preview"></iframe>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js"></script>
-    <script type="module" src="/script.js"></script>
+</div>
+
+<!-- ── Toast ───────────────────────────────────────────────── -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="/script.js"></script>
 </body>
 </html>
